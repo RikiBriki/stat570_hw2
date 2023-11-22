@@ -1,0 +1,76 @@
+---
+title: "hw2Stat570"
+format: html
+editor: visual
+---
+
+## Other Usages Of Regular Expressions
+
+\## The apropos function searches global enviroment for matching strings bellow shows all functions and objects loaded in your global enviroment including ean
+
+```{r}
+apropos("ean")
+```
+
+It accepts RegExp, example try out looking for objects ending with "ean"
+
+```{r}
+apropos("\\w*ean\\b$")
+```
+
+Now lets try something else from tidyverse package
+
+```{r}
+apropos("pivot")
+```
+
+Notice we donts see pivot_longer and pivot_wider functions we have previously covered lets load tidyverse and try again
+
+```{r}
+library(tidyverse)
+
+```
+
+tidyverse is now loaded,
+
+```{r}
+apropos("pivot")
+```
+
+Now we can see functions
+
+list.files(path,pattern) also accepts regular expressions, feel free to look for a file existing in your desktop. You can also use Regular Expressions in SQL based libraries and pretty much any programming langauge also. Code bellow filters for only for species including set in name
+
+```{r}
+head(iris)
+library(sqldf)
+result = sqldf("select * from iris WHERE 
+                Species LIKE '%set%'")
+unique(result$Species)
+```
+
+lets take look at other group
+
+```{r}
+unique(iris$Species)
+```
+
+Can also use it for splitting columns
+
+```{r}
+iris_small= iris[,-5]## eliminating the Species column that we wont be using 
+iris_long <- iris_small %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = c("Part", "Measurement"),
+    values_to = "Value",
+    names_pattern = "(\\w+)\\.(\\w+)"
+  )
+iris_long
+```
+
+##  Summary
+
+for more information you can read [regular-expressions.info](https://www.regular-expressions.info/tutorial.html) or check out stringr package with the r code running r code in terminal " vignette("regular-expressions", package="stringr") "
+
+Regular expressions are widely used in languages like SQL, All programming languages, in IDEs for example you can CTRL+F and use regex option to search inside your R code in RStudio, and knowledge of it's capabilities is quite important
